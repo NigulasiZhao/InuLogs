@@ -4,7 +4,7 @@
 
 InuLogs 是一个专为 ASP.Net Core 网站应用程序和 API 设计的 HTTP 请求和异常记录器与查看器组件。它为开发人员提供了实时记录和查看网站应用程序中 HTTP 请求及其响应、以及运行时捕获的异常的功能。`InuLogs` 默认使用MongoDB 作为服务器端数据库，但也支持外部数据库，如 `Oracle` 、`PostgreSQL`、`MySQL` 和 `MSSQL`。此外，该组件还提供了在页面上重试 HTTP 请求的功能，并允许根据关键词检索响应内容、标记返回结果的准确性。这一强大的工具有助于开发人员更高效地进行调试和问题排查。
 
-# ![Request & Response Viewer](https://github.com/NigulasiZhao/InuLogs/blob/main/watchlog.png)
+# ![Request & Response Viewer](https://github.com/NigulasiZhao/InuLogs/blob/main/inulog.png)
 
 ## 特征
 
