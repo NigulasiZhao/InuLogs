@@ -1,0 +1,65 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp3.1;net6.0;net8.0</TargetFrameworks>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Title>InuLogs</Title>
+    <PackageIcon>favicon.jpg</PackageIcon>
+    <Authors>Zhao Liang</Authors>
+    <Version>1.0.2</Version>
+    <Description>InuLogs 是一个专为 ASP.Net Core 网站应用程序和 API 设计的 HTTP 请求和异常记录器与查看器组件。它为开发人员提供了实时记录和查看网站应用程序中 HTTP 请求及其响应、以及运行时捕获的异常的功能。InuLogs 默认使用 MongoDB 作为服务器端数据库，但也支持外部数据库，如 Oracle、PostgreSQL、MySQL 和 MSSQL。此外，该组件还提供了在页面上重试 HTTP 请求的功能，并允许根据关键词检索响应内容、标记返回结果的准确性。这一强大的工具有助于开发人员更高效地进行调试和问题排查。</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+   <None Remove="src\WatchPage\**" />
+<EmbeddedResource Include="src\WatchPage\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="src\InuPage\css\bootstrap.min.css" />
+    <EmbeddedResource Include="src\InuPage\css\bootstrap.min.css.map" />
+    <EmbeddedResource Include="src\InuPage\images\icons\favicon.ico" />
+    <EmbeddedResource Include="src\InuPage\images\inulogsLogo.png" />
+    <EmbeddedResource Include="src\InuPage\index.html">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="src\InuPage\js\bootstrap.min.js" />
+    <EmbeddedResource Include="src\InuPage\js\jquery-3.2.1.min.js" />
+    <EmbeddedResource Include="src\InuPage\js\moment.min.js" />
+    <EmbeddedResource Include="src\InuPage\js\popper.min.js" />
+    <EmbeddedResource Include="src\InuPage\signalr\signalr.js" />
+    <EmbeddedResource Include="src\InuPage\signalr\signalr.min.js" />
+  </ItemGroup>
+<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+<ItemGroup>
+  <None Include="C:\Users\Administrator\Desktop\favicon.jpg">
+    <Pack>True</Pack>
+    <PackagePath>\</PackagePath>
+  </None>
+</ItemGroup>
+<ItemGroup>
+		<PackageReference Include="Dapper" Version="2.0.123" />
+		<PackageReference Include="Dapper.Oracle" Version="2.0.0" />
+		<PackageReference Include="LiteDB" Version="5.0.11" />
+		<PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+		<PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
+		<PackageReference Include="Microsoft.Extensions.FileProviders.Abstractions" Version="3.1.22" />
+		<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="3.1.22" />
+		<PackageReference Include="Microsoft.Extensions.FileProviders.Physical" Version="3.1.22" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" Condition="'$(TargetFramework)' == 'net8.0'" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.22" />
+		<PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.2.0" />
+		<PackageReference Include="MongoDB.Driver" Version="2.18.0" />
+		<PackageReference Include="MySql.Data" Version="8.0.29" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+		<PackageReference Include="Npgsql" Version="[5.0.0,5.0.10]" Condition="'$(TargetFramework)' == 'netcoreapp3.1'" />
+		<PackageReference Include="Npgsql" Version="6.0.4" Condition="'$(TargetFramework)' == 'net6.0'" />
+		<PackageReference Include="Npgsql" Version="8.0.2" Condition="'$(TargetFramework)' == 'net8.0'" />
+		<PackageReference Include="Oracle.ManagedDataAccess.Core" Version="23.4.0" />
+		<PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
+	</ItemGroup>
+</Project>

@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34205.153
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InuLogs", "InuLogs\InuLogs.csproj", "{F905854E-DDCF-4741-B345-ED809F48B8FD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InuLogsTestAPI", "InuLogsTestAPI\InuLogsTestAPI.csproj", "{4BBCEEB4-4C74-416E-A159-E981207A397A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F905854E-DDCF-4741-B345-ED809F48B8FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F905854E-DDCF-4741-B345-ED809F48B8FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F905854E-DDCF-4741-B345-ED809F48B8FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F905854E-DDCF-4741-B345-ED809F48B8FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4BBCEEB4-4C74-416E-A159-E981207A397A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BBCEEB4-4C74-416E-A159-E981207A397A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BBCEEB4-4C74-416E-A159-E981207A397A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BBCEEB4-4C74-416E-A159-E981207A397A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D6F82336-98EF-423E-B8A3-F841C8111557}
+	EndGlobalSection
+EndGlobal
