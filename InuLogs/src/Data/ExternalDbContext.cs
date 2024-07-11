@@ -186,13 +186,13 @@ namespace InuLogs.src.Data
                 InuLogsDbDriverEnum.PostgreSql => @$"
                              CREATE TABLE IF NOT EXISTS {Constants.InuLogTableName} (
                               id              SERIAL PRIMARY KEY,
-                              responseBody    VARCHAR,
+                              responseBody    TEXT,
                               responseStatus  int NOT NULL,
-                              requestBody     VARCHAR,
-                              queryString     VARCHAR,
-                              path            VARCHAR,
-                              requestHeaders  VARCHAR,
-                              responseHeaders VARCHAR,
+                              requestBody     TEXT,
+                              queryString     TEXT,
+                              path            TEXT,
+                              requestHeaders  TEXT,
+                              responseHeaders TEXT,
                               method          VARCHAR(30),
                               host            VARCHAR,
                               ipAddress       VARCHAR(30),
@@ -204,22 +204,22 @@ namespace InuLogs.src.Data
                             );
                            CREATE TABLE IF NOT EXISTS {Constants.InuLogExceptionTableName} (
                                 id            SERIAL PRIMARY KEY,
-                                message       VARCHAR,
-                                stackTrace    VARCHAR,
-                                typeOf        VARCHAR,
-                                source        VARCHAR,
-                                path          VARCHAR,
+                                message       TEXT,
+                                stackTrace    TEXT,
+                                typeOf        TEXT,
+                                source        TEXT,
+                                path          TEXT,
                                 method        VARCHAR(30),
-                                queryString   VARCHAR,
-                                requestBody   VARCHAR,
+                                queryString   TEXT,
+                                requestBody   TEXT,
                                 encounteredAt TIMESTAMP with time zone NOT NULL
                              );
                            CREATE TABLE IF NOT EXISTS {Constants.LogsTableName} (
                                 id            SERIAL PRIMARY KEY,
                                 eventId       VARCHAR(100),
-                                message       VARCHAR,
+                                message       TEXT,
                                 timestamp     TIMESTAMP with time zone NOT NULL,
-                                callingFrom   VARCHAR,
+                                callingFrom   TEXT,
                                 callingMethod VARCHAR(100),
                                 lineNumber    INTEGER,
                                 logLevel      VARCHAR(30)
@@ -230,15 +230,15 @@ BEGIN
                             BEGIN
                                EXECUTE IMMEDIATE 'CREATE TABLE {Constants.InuLogTableName} (
                                   ID              NUMBER PRIMARY KEY,
-                                  RESPONSEBODY    VARCHAR2(4000),
+                                  RESPONSEBODY    CLOB,
                                   RESPONSESTATUS  NUMBER NOT NULL,
-                                  REQUESTBODY     VARCHAR2(4000),
-                                  QUERYSTRING     VARCHAR2(4000),
-                                  PATH            VARCHAR2(4000),
-                                  REQUESTHEADERS  VARCHAR2(4000),
-                                  RESPONSEHEADERS VARCHAR2(4000),
+                                  REQUESTBODY     CLOB,
+                                  QUERYSTRING     CLOB,
+                                  PATH            CLOB,
+                                  REQUESTHEADERS  CLOB,
+                                  RESPONSEHEADERS CLOB,
                                   METHOD          VARCHAR2(30),
-                                  HOST            VARCHAR2(4000),
+                                  HOST            CLOB,
                                   IPADDRESS       VARCHAR2(30),
                                   TIMESPENT       VARCHAR2(100),
                                   STARTTIME       DATE NOT NULL,
@@ -257,14 +257,14 @@ BEGIN
                             BEGIN
                                EXECUTE IMMEDIATE 'CREATE TABLE {Constants.InuLogExceptionTableName} (
                                   ID            NUMBER PRIMARY KEY,
-                                  MESSAGE       VARCHAR2(4000),
-                                  STACKTRACE    VARCHAR2(4000),
-                                  TYPEOF        VARCHAR2(4000),
-                                  SOURCE        VARCHAR2(4000),
-                                  PATH          VARCHAR2(4000),
+                                  MESSAGE       CLOB,
+                                  STACKTRACE    CLOB,
+                                  TYPEOF        CLOB,
+                                  SOURCE        CLOB,
+                                  PATH          CLOB,
                                   METHOD        VARCHAR2(30),
-                                  QUERYSTRING   VARCHAR2(4000),
-                                  REQUESTBODY   VARCHAR2(4000),
+                                  QUERYSTRING   CLOB,
+                                  REQUESTBODY   CLOB,
                                   ENCOUNTEREDAT DATE NOT NULL
                                )';
                             EXCEPTION
@@ -279,9 +279,9 @@ BEGIN
                                EXECUTE IMMEDIATE 'CREATE TABLE {Constants.LogsTableName} (
                                   ID            NUMBER PRIMARY KEY,
                                   EVENTID       VARCHAR2(100),
-                                  MESSAGE       VARCHAR2(4000),
+                                  MESSAGE       CLOB,
                                   TIMESTAMP     DATE NOT NULL,
-                                  CALLINGFROM   VARCHAR2(4000),
+                                  CALLINGFROM   CLOB,
                                   CALLINGMETHOD VARCHAR2(100),
                                   LINENUMBER    NUMBER,
                                   LOGLEVEL      VARCHAR2(30)

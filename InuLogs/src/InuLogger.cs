@@ -91,7 +91,6 @@ namespace InuLogs.src
 
                 //Insert
                 await DynamicDBManager.InsertLog(log);
-                //await ServiceProviderFactory.BroadcastHelper.BroadcastLog(log);
             }
             catch (Exception ex)
             {

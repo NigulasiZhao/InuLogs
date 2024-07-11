@@ -36,7 +36,7 @@ namespace InuLogs.src.Helpers
 
             if (!string.IsNullOrEmpty(verbString))
             {
-                query += $" AND LOWER( {nameof(InuLog.Method)} ) LIKE '%{verbString}%' " ;
+                query += $" AND LOWER( {nameof(InuLog.Method)} ) LIKE '%{verbString}%' ";
             }
 
             if (!string.IsNullOrEmpty(statusCode))
@@ -73,14 +73,14 @@ namespace InuLogs.src.Helpers
                     parameters.Add("ResultException", 0, OracleMappingType.Int32, ParameterDirection.Input);
                 }
                 parameters.Add("ResponseStatus", log.ResponseStatus, OracleMappingType.Int32, ParameterDirection.Input);
-                parameters.Add("ResponseBody", log.ResponseBody, OracleMappingType.Varchar2, ParameterDirection.Input);
-                parameters.Add("RequestBody", log.RequestBody, OracleMappingType.Varchar2, ParameterDirection.Input);
-                parameters.Add("QueryString", log.QueryString, OracleMappingType.Varchar2, ParameterDirection.Input);
-                parameters.Add("Path", log.Path, OracleMappingType.Varchar2, ParameterDirection.Input);
-                parameters.Add("RequestHeaders", log.RequestHeaders, OracleMappingType.Varchar2, ParameterDirection.Input);
-                parameters.Add("ResponseHeaders", log.ResponseHeaders, OracleMappingType.Varchar2, ParameterDirection.Input);
+                parameters.Add("ResponseBody", log.ResponseBody, OracleMappingType.Clob, ParameterDirection.Input);
+                parameters.Add("RequestBody", log.RequestBody, OracleMappingType.Clob, ParameterDirection.Input);
+                parameters.Add("QueryString", log.QueryString, OracleMappingType.Clob, ParameterDirection.Input);
+                parameters.Add("Path", log.Path, OracleMappingType.Clob, ParameterDirection.Input);
+                parameters.Add("RequestHeaders", log.RequestHeaders, OracleMappingType.Clob, ParameterDirection.Input);
+                parameters.Add("ResponseHeaders", log.ResponseHeaders, OracleMappingType.Clob, ParameterDirection.Input);
                 parameters.Add("Method", log.Method, OracleMappingType.Varchar2, ParameterDirection.Input);
-                parameters.Add("Host", log.Host, OracleMappingType.Varchar2, ParameterDirection.Input);
+                parameters.Add("Host", log.Host, OracleMappingType.Clob, ParameterDirection.Input);
                 parameters.Add("IpAddress", log.IpAddress, OracleMappingType.Varchar2, ParameterDirection.Input);
                 parameters.Add("TimeSpent", log.TimeSpent, OracleMappingType.Varchar2, ParameterDirection.Input);
                 parameters.Add("StartTime", log.StartTime, OracleMappingType.Date, ParameterDirection.Input);
@@ -90,7 +90,7 @@ namespace InuLogs.src.Helpers
                 using (var connection = ExternalDbContext.CreateSQLConnection())
                 {
                     connection.Open();
-                    connection.ExecuteAsync(query, parameters);
+                    connection.Execute(query, parameters);
                     connection.Close();
                 }
             }
@@ -163,14 +163,14 @@ namespace InuLogs.src.Helpers
                 var query = @$"INSERT INTO {Constants.InuLogExceptionTableName} (message,stackTrace,typeOf,source,path,method,queryString,requestBody,encounteredAt) " +
                 "VALUES (:Message,:StackTrace,:TypeOf,:Source,:Path,:Method,:QueryString,:RequestBody,:EncounteredAt)";
                 var parameters = new OracleDynamicParameters();
-                parameters.Add("Message", log.Message, OracleMappingType.Varchar2, ParameterDirection.Input);
-                parameters.Add("StackTrace", log.StackTrace, OracleMappingType.Varchar2, ParameterDirection.Input);
-                parameters.Add("TypeOf", log.TypeOf, OracleMappingType.Varchar2, ParameterDirection.Input);
-                parameters.Add("Source", log.Source, OracleMappingType.Varchar2, ParameterDirection.Input);
-                parameters.Add("Path", log.Path, OracleMappingType.Varchar2, ParameterDirection.Input);
+                parameters.Add("Message", log.Message, OracleMappingType.Clob, ParameterDirection.Input);
+                parameters.Add("StackTrace", log.StackTrace, OracleMappingType.Clob, ParameterDirection.Input);
+                parameters.Add("TypeOf", log.TypeOf, OracleMappingType.Clob, ParameterDirection.Input);
+                parameters.Add("Source", log.Source, OracleMappingType.Clob, ParameterDirection.Input);
+                parameters.Add("Path", log.Path, OracleMappingType.Clob, ParameterDirection.Input);
                 parameters.Add("Method", log.Method, OracleMappingType.Varchar2, ParameterDirection.Input);
-                parameters.Add("QueryString", log.QueryString, OracleMappingType.Varchar2, ParameterDirection.Input);
-                parameters.Add("RequestBody", log.RequestBody, OracleMappingType.Varchar2, ParameterDirection.Input);
+                parameters.Add("QueryString", log.QueryString, OracleMappingType.Clob, ParameterDirection.Input);
+                parameters.Add("RequestBody", log.RequestBody, OracleMappingType.Clob, ParameterDirection.Input);
                 parameters.Add("EncounteredAt", log.EncounteredAt, OracleMappingType.Date, ParameterDirection.Input);
 
                 using (var connection = ExternalDbContext.CreateSQLConnection())
@@ -244,22 +244,13 @@ namespace InuLogs.src.Helpers
                  "VALUES (:Message,:EventId,:Timestamp,:CallingFrom,:CallingMethod,:LineNumber,:LogLevel)";
 
                 var parameters = new OracleDynamicParameters();
-                parameters.Add("Message", log.Message, OracleMappingType.Varchar2, ParameterDirection.Input);
-                parameters.Add("CallingFrom", log.CallingFrom, OracleMappingType.Varchar2, ParameterDirection.Input);
+                parameters.Add("Message", log.Message, OracleMappingType.Clob, ParameterDirection.Input);
+                parameters.Add("CallingFrom", log.CallingFrom, OracleMappingType.Clob, ParameterDirection.Input);
                 parameters.Add("CallingMethod", log.CallingMethod, OracleMappingType.Varchar2, ParameterDirection.Input);
                 parameters.Add("LineNumber", log.LineNumber, OracleMappingType.Int32, ParameterDirection.Input);
                 parameters.Add("LogLevel", log.LogLevel, OracleMappingType.Varchar2, ParameterDirection.Input);
                 parameters.Add("EventId", log.EventId, OracleMappingType.Varchar2, ParameterDirection.Input);
-
-                if (GeneralHelper.IsPostgres())
-                {
-                    parameters.Add("Timestamp", log.Timestamp, OracleMappingType.Date, ParameterDirection.Input);
-                }
-                else
-                {
-                    parameters.Add("Timestamp", log.Timestamp, OracleMappingType.Date, ParameterDirection.Input);
-                }
-
+                parameters.Add("Timestamp", log.Timestamp, OracleMappingType.Date, ParameterDirection.Input);
                 using (var connection = ExternalDbContext.CreateSQLConnection())
                 {
                     await connection.ExecuteAsync(query, parameters);

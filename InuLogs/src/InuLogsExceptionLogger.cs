@@ -1,5 +1,4 @@
-﻿using InuLogs.src.Interfaces;
-using InuLogs.src.Managers;
+﻿using InuLogs.src.Managers;
 using InuLogs.src.Models;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -13,11 +12,9 @@ namespace InuLogs.src
     internal class InuLogsExceptionLogger
     {
         private readonly RequestDelegate _next;
-        //private readonly IBroadcastHelper _broadcastHelper;
-        public InuLogsExceptionLogger(RequestDelegate next/*, IBroadcastHelper broadcastHelper*/)
+        public InuLogsExceptionLogger(RequestDelegate next)
         {
             _next = next;
-            //_broadcastHelper = broadcastHelper;
         }
 
         public async Task InvokeAsync(HttpContext context)
@@ -47,7 +44,6 @@ namespace InuLogs.src
 
             //Insert
             await DynamicDBManager.InsertInuExceptionLog(inuExceptionLog);
-            //await _broadcastHelper.BroadcastExLog(inuExceptionLog);
         }
     }
 }

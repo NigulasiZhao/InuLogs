@@ -17,7 +17,6 @@ namespace InuLogs.src.Managers
         }
         private static string _connectionString = InuLogsExternalDbConfig.ConnectionString;
 
-        //private static bool isExternalDb() => !string.IsNullOrEmpty(_connectionString);
 
         private static TargetDbEnum GetTargetDbEnum
         {

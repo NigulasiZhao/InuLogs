@@ -1,6 +1,5 @@
 ﻿using InuLogs.src.Enums;
 using InuLogs.src.Helpers;
-using InuLogs.src.Interfaces;
 using InuLogs.src.Managers;
 using InuLogs.src.Models;
 using Microsoft.AspNetCore.Http;
@@ -24,15 +23,13 @@ namespace InuLogs.src
         public static InuLogsSerializerEnum Serializer;
         private readonly RequestDelegate _next;
         private readonly RecyclableMemoryStreamManager _recyclableMemoryStreamManager;
-        //private readonly IBroadcastHelper _broadcastHelper;
         private readonly InuLogsOptionsModel _options;
 
-        public InuLogs(InuLogsOptionsModel options, RequestDelegate next/*, IBroadcastHelper broadcastHelper*/)
+        public InuLogs(InuLogsOptionsModel options, RequestDelegate next)
         {
             _next = next;
             _options = options;
             _recyclableMemoryStreamManager = new RecyclableMemoryStreamManager();
-            //_broadcastHelper = broadcastHelper;
 
             Serializer = options.Serializer;
             InuLogsConfigModel.UserName = _options.InuPageUsername;
@@ -79,7 +76,6 @@ namespace InuLogs.src
                 };
 
                 await DynamicDBManager.InsertInuLog(inuLog);
-                //await _broadcastHelper.BroadcastInuLog(inuLog);
             }
             else
             {
@@ -100,7 +96,6 @@ namespace InuLogs.src
                 QueryString = context.Request.QueryString.ToString(),
                 StartTime = startTime,
                 Scheme = context.Request.Scheme,
-                // Headers = context.Request.Headers.Select(x => x.ToString()).Aggregate((a, b) => a + ": " + b),
                 Headers = System.Text.Json.JsonSerializer.Serialize(context.Request.Headers.ToDictionary(h => h.Key, h => string.Join(", ", h.Value)), new JsonSerializerOptions { WriteIndented = true })
             };
 
@@ -135,7 +130,6 @@ namespace InuLogs.src
                             ResponseBody = responseBody,
                             ResponseStatus = context.Response.StatusCode,
                             FinishTime = DateTime.Now,
-                            //Headers = context.Response.Headers.ContentLength > 0 ? context.Response.Headers.Select(x => x.ToString()).Aggregate((a, b) => a + ": " + b) : string.Empty,
                             Headers = context.Response.Headers.ContentLength > 0 ? System.Text.Json.JsonSerializer.Serialize(context.Response.Headers.ToDictionary(h => h.Key, h => string.Join(", ", h.Value)), new JsonSerializerOptions { WriteIndented = true }) : string.Empty
                         };
                         await originalResponseBody.CopyToAsync(originalBodyStream);

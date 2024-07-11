@@ -94,7 +94,6 @@ namespace InuLogs.src.Controllers
         public JsonResult RequestRetry([FromBody] RequestRetryInput input)
         {
             Dictionary<string, string> HeaderDic = new Dictionary<string, string>();
-            //Dictionary<string, string> BodyDic = new Dictionary<string, string>();
             if (!string.IsNullOrEmpty(input.headers))
             {
                 HeaderDic = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, string>>(input.headers);

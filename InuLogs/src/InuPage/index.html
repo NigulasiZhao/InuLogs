@@ -586,7 +586,8 @@
                         </div>
                         <div class="form-group">
                             <label for="retryBody">响应结果</label>
-                            <textarea class="form-control" id="retryReponse" rows="3" placeholder="Enter body"></textarea>
+                            <pre id="retryReponse" class="bg-light p-2" style="height: 200px; overflow-y: scroll; white-space: pre-wrap;"></pre>
+                            <!-- <textarea class="form-control" id="retryReponse" rows="3" placeholder="Enter body"></textarea> -->
                         </div>
                     </form>
                 </div>
@@ -749,7 +750,7 @@
                 context: document.body,
                 success: function (data) {
                     $('#requestTips').modal('show');
-                    $('#retryReponse').val(JSON.stringify(data));
+                    $('#retryReponse').text(JSON.stringify(JSON.parse(data), null, 4));
                     $btn.prop('disabled', false); // 启用按钮
                     $btn.html('发送');
                     setTimeout(function () {
@@ -759,7 +760,7 @@
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     $('#requesterroeTips').modal('show');
-                    $('#retryReponse').val(error);
+                    $('#retryReponse').text(error);
                     setTimeout(function () {
                         $('#requesterroeTips').modal('hide');
                     }, 3000);

@@ -1,8 +1,5 @@
 ﻿using InuLogs.src.Data;
 using InuLogs.src.Exceptions;
-using InuLogs.src.Helpers;
-using InuLogs.src.Hubs;
-using InuLogs.src.Interfaces;
 using InuLogs.src.Models;
 using InuLogs.src.Services;
 using Microsoft.AspNetCore.Builder;
@@ -11,11 +8,9 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace InuLogs
 {
@@ -87,7 +82,6 @@ namespace InuLogs
 
         public static IApplicationBuilder UseInuLog(this IApplicationBuilder app, Action<InuLogsOptionsModel> configureOptions)
         {
-            //ServiceProviderFactory.BroadcastHelper = app.ApplicationServices.GetService<IBroadcastHelper>();
             var options = new InuLogsOptionsModel();
             configureOptions(options);
             if (string.IsNullOrEmpty(options.InuPageUsername))
@@ -128,7 +122,6 @@ namespace InuLogs
 
             return app.UseEndpoints(endpoints =>
             {
-                //endpoints.MapHub<LoggerHub>("/zllogger");
                 endpoints.MapControllerRoute(
                     name: "ZLinupage",
                     pattern: "ZLinupage/{action}",
