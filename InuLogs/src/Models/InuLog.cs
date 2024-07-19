@@ -24,5 +24,15 @@ namespace InuLogs.src.Models
         public int? ResultException { get; set; }
 
         public string Scheme { get; set; }
+
+        public string RequestAndResponseInfo { get; set; }
+    }
+    public class RequestAndResponseInfoModel
+    {
+        public string ResponseBody { get; set; }
+        public string RequestBody { get; set; }
+        public string QueryString { get; set; }
+        public string RequestHeaders { get; set; }
+        public string ResponseHeaders { get; set; }
     }
 }

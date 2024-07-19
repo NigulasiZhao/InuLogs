@@ -20,7 +20,7 @@ namespace InuLogs.src.Helpers
             if (!string.IsNullOrEmpty(searchString))
             {
                 searchString = searchString.ToLower();
-                query.Where(l => l.Path.ToLower().Contains(searchString) || l.Method.ToLower().Contains(searchString) || l.ResponseStatus.ToString().Contains(searchString) || (!string.IsNullOrEmpty(l.QueryString) && l.QueryString.ToLower().Contains(searchString)));
+                query.Where(l => l.Path.ToLower().Contains(searchString) || l.Method.ToLower().Contains(searchString) || l.ResponseStatus.ToString().Contains(searchString) || (!string.IsNullOrEmpty(l.RequestAndResponseInfo) && l.RequestAndResponseInfo.ToLower().Contains(searchString)));
             }
 
             if (!string.IsNullOrEmpty(verbString))
@@ -32,7 +32,17 @@ namespace InuLogs.src.Helpers
             {
                 query.Where(l => l.ResponseStatus.ToString() == statusCode);
             }
-            return query.OrderByDescending(x => x.Id).ToPaginatedList(pageNumber);
+            Page<InuLog> result = query.OrderByDescending(x => x.Id).ToPaginatedList(pageNumber);
+            foreach (var item in result.Data)
+            {
+                RequestAndResponseInfoModel Info = Newtonsoft.Json.JsonConvert.DeserializeObject<RequestAndResponseInfoModel>(item.RequestAndResponseInfo);
+                item.QueryString = Info.QueryString;
+                item.ResponseHeaders = Info.ResponseHeaders;
+                item.ResponseBody = Info.ResponseBody;
+                item.RequestBody = Info.RequestBody;
+                item.RequestHeaders = Info.RequestHeaders;
+            }
+            return result;
         }
         public static int InsertInuLog(InuLog log)
         {

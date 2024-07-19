@@ -100,32 +100,28 @@ namespace InuLogs.src.Data
                 InuLogsDbDriverEnum.MSSQL => @$"
                                   IF OBJECT_ID('dbo.{Constants.InuLogTableName}', 'U') IS NULL CREATE TABLE {Constants.InuLogTableName} (
                                   id              INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
-                                  responseBody    VARCHAR(max),
                                   responseStatus  int NOT NULL,
-                                  requestBody     VARCHAR(max),
-                                  queryString     VARCHAR(max),
-                                  path            VARCHAR(max),
-                                  requestHeaders  VARCHAR(max),
-                                  responseHeaders VARCHAR(max),
+                                  path            VARCHAR(2000),
                                   method          VARCHAR(30),
-                                  host            VARCHAR(max),
+                                  host            VARCHAR(2000),
                                   ipAddress       VARCHAR(30),
                                   timeSpent       VARCHAR(100),
                                   startTime       VARCHAR(100) NOT NULL,
                                   endTime         VARCHAR(100) NOT NULL,
                                   resultException  int,
-                                  scheme       VARCHAR(100)
+                                  scheme       VARCHAR(100),
+                                  requestandresponseinfo VARCHAR(max)
                             );
                                 IF OBJECT_ID('dbo.{Constants.InuLogExceptionTableName}', 'U') IS NULL CREATE TABLE {Constants.InuLogExceptionTableName} (
                                 id            INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
                                 message       VARCHAR(max),
                                 stackTrace    VARCHAR(max),
-                                typeOf        VARCHAR(max),
-                                source        VARCHAR(max),
-                                path          VARCHAR(max),
+                                typeOf        VARCHAR(2000),
+                                source        VARCHAR(2000),
+                                path          VARCHAR(2000),
                                 method        VARCHAR(30),
-                                queryString   VARCHAR(max),
-                                requestBody   VARCHAR(max),
+                                queryString   VARCHAR(2000),
+                                requestBody   VARCHAR(2000),
                                 encounteredAt VARCHAR(100) NOT NULL
                              );
                                 IF OBJECT_ID('dbo.{Constants.LogsTableName}', 'U') IS NULL CREATE TABLE {Constants.LogsTableName} (
@@ -143,32 +139,28 @@ namespace InuLogs.src.Data
                 InuLogsDbDriverEnum.MySql => @$"
                              CREATE TABLE IF NOT EXISTS {Constants.InuLogTableName} (
                               id              INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-                              responseBody    TEXT(65535),
                               responseStatus  INT NOT NULL,
-                              requestBody     TEXT(65535),
-                              queryString     VARCHAR(65535),
-                              path            VARCHAR(65535),
-                              requestHeaders  TEXT(65535),
-                              responseHeaders VARCHAR(65535),
+                              path            VARCHAR(2000),
                               method          VARCHAR(30),
-                              host            VARCHAR(65535),
+                              host            VARCHAR(2000),
                               ipAddress       VARCHAR(30),
                               timeSpent       VARCHAR(100),
                               startTime       VARCHAR(100) NOT NULL,
                               endTime         VARCHAR(100) NOT NULL,
                               resultException  int,
-                              scheme       VARCHAR(100)
+                              scheme       VARCHAR(100),
+                              requestandresponseinfo VARCHAR(65535)
                             );
                            CREATE TABLE IF NOT EXISTS {Constants.InuLogExceptionTableName} (
                                 id            INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
                                 message       TEXT(65535),
                                 stackTrace    TEXT(65535),
-                                typeOf        VARCHAR(65535),
-                                source        TEXT(65535),
-                                path          VARCHAR(65535),
+                                typeOf        VARCHAR(2000),
+                                source        VARCHAR(2000),
+                                path          VARCHAR(2000),
                                 method        VARCHAR(30),
-                                queryString   VARCHAR(65535),
-                                requestBody   TEXT(65535),
+                                queryString   VARCHAR(2000),
+                                requestBody   VARCHAR(2000),
                                 encounteredAt VARCHAR(100) NOT NULL
                              );
                            CREATE TABLE IF NOT EXISTS {Constants.LogsTableName} (
@@ -186,32 +178,28 @@ namespace InuLogs.src.Data
                 InuLogsDbDriverEnum.PostgreSql => @$"
                              CREATE TABLE IF NOT EXISTS {Constants.InuLogTableName} (
                               id              SERIAL PRIMARY KEY,
-                              responseBody    TEXT,
                               responseStatus  int NOT NULL,
-                              requestBody     TEXT,
-                              queryString     TEXT,
-                              path            TEXT,
-                              requestHeaders  TEXT,
-                              responseHeaders TEXT,
+                              path            VARCHAR(2000),
                               method          VARCHAR(30),
-                              host            VARCHAR,
+                              host            VARCHAR(2000),
                               ipAddress       VARCHAR(30),
                               timeSpent       VARCHAR,
                               startTime       TIMESTAMP with time zone NOT NULL,
                               endTime         TIMESTAMP with time zone NOT NULL,
                               resultException  int,
-                              scheme       VARCHAR(100)
+                              scheme       VARCHAR(100),
+                              requestandresponseinfo TEXT
                             );
                            CREATE TABLE IF NOT EXISTS {Constants.InuLogExceptionTableName} (
                                 id            SERIAL PRIMARY KEY,
                                 message       TEXT,
                                 stackTrace    TEXT,
-                                typeOf        TEXT,
-                                source        TEXT,
-                                path          TEXT,
+                                typeOf        VARCHAR(2000),
+                                source        VARCHAR(2000),
+                                path          VARCHAR(2000),
                                 method        VARCHAR(30),
-                                queryString   TEXT,
-                                requestBody   TEXT,
+                                queryString   VARCHAR(2000),
+                                requestBody   VARCHAR(2000),
                                 encounteredAt TIMESTAMP with time zone NOT NULL
                              );
                            CREATE TABLE IF NOT EXISTS {Constants.LogsTableName} (
@@ -230,21 +218,17 @@ BEGIN
                             BEGIN
                                EXECUTE IMMEDIATE 'CREATE TABLE {Constants.InuLogTableName} (
                                   ID              NUMBER PRIMARY KEY,
-                                  RESPONSEBODY    CLOB,
                                   RESPONSESTATUS  NUMBER NOT NULL,
-                                  REQUESTBODY     CLOB,
-                                  QUERYSTRING     CLOB,
-                                  PATH            CLOB,
-                                  REQUESTHEADERS  CLOB,
-                                  RESPONSEHEADERS CLOB,
+                                  PATH            VARCHAR2(2000),
                                   METHOD          VARCHAR2(30),
-                                  HOST            CLOB,
+                                  HOST            VARCHAR2(2000),
                                   IPADDRESS       VARCHAR2(30),
                                   TIMESPENT       VARCHAR2(100),
                                   STARTTIME       DATE NOT NULL,
                                   ENDTIME         DATE NOT NULL,
                                   RESULTEXCEPTION NUMBER,
-                                  SCHEME       VARCHAR2(100)
+                                  SCHEME       VARCHAR2(100),
+                                  REQUESTANDRESPONSEINFO CLOB
                                )';
                             EXCEPTION
                                WHEN OTHERS THEN
@@ -259,12 +243,12 @@ BEGIN
                                   ID            NUMBER PRIMARY KEY,
                                   MESSAGE       CLOB,
                                   STACKTRACE    CLOB,
-                                  TYPEOF        CLOB,
-                                  SOURCE        CLOB,
-                                  PATH          CLOB,
+                                  TYPEOF        VARCHAR2(2000),
+                                  SOURCE        VARCHAR2(2000),
+                                  PATH          VARCHAR2(2000),
                                   METHOD        VARCHAR2(30),
-                                  QUERYSTRING   CLOB,
-                                  REQUESTBODY   CLOB,
+                                  QUERYSTRING   VARCHAR2(2000),
+                                  REQUESTBODY   VARCHAR2(2000),
                                   ENCOUNTEREDAT DATE NOT NULL
                                )';
                             EXCEPTION

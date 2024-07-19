@@ -4,6 +4,7 @@ using InuLogs.src.Data;
 using InuLogs.src.Models;
 using InuLogs.src.Utilities;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using MongoDB.Bson.IO;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -29,9 +30,9 @@ namespace InuLogs.src.Helpers
             if (!string.IsNullOrEmpty(searchString))
             {
                 if (GeneralHelper.IsPostgres())
-                    query += $" AND (LOWER( {nameof(InuLog.Path)} ) LIKE '%{searchString}%' OR LOWER( {nameof(InuLog.Method)} ) LIKE '%{searchString}%' OR {nameof(InuLog.ResponseStatus)}::text LIKE '%{searchString}%' OR LOWER( {nameof(InuLog.QueryString)} ) LIKE '%{searchString}%') ";
+                    query += $" AND (LOWER( {nameof(InuLog.Path)} ) LIKE '%{searchString}%' OR LOWER( {nameof(InuLog.Method)} ) LIKE '%{searchString}%' OR {nameof(InuLog.ResponseStatus)}::text LIKE '%{searchString}%' OR LOWER( {nameof(InuLog.RequestAndResponseInfo)} ) LIKE '%{searchString}%') ";
                 else
-                    query += $" AND (LOWER( {nameof(InuLog.Path)} ) LIKE '%{searchString}%' OR LOWER( {nameof(InuLog.Method)} ) LIKE '%{searchString}%' OR {nameof(InuLog.ResponseStatus)} LIKE '%{searchString}%' OR LOWER( {nameof(InuLog.QueryString)} ) LIKE '%{searchString}%') ";
+                    query += $" AND (LOWER( {nameof(InuLog.Path)} ) LIKE '%{searchString}%' OR LOWER( {nameof(InuLog.Method)} ) LIKE '%{searchString}%' OR {nameof(InuLog.ResponseStatus)} LIKE '%{searchString}%' OR LOWER( {nameof(InuLog.RequestAndResponseInfo)} ) LIKE '%{searchString}%') ";
             }
 
             if (!string.IsNullOrEmpty(verbString))
@@ -52,6 +53,15 @@ namespace InuLogs.src.Helpers
             {
                 connection.Open();
                 var logs = await connection.QueryAsync<InuLog>(query);
+                foreach (var log in logs)
+                {
+                    RequestAndResponseInfoModel Info = Newtonsoft.Json.JsonConvert.DeserializeObject<RequestAndResponseInfoModel>(log.RequestAndResponseInfo);
+                    log.QueryString = Info.QueryString;
+                    log.ResponseHeaders = Info.ResponseHeaders;
+                    log.ResponseBody = Info.ResponseBody;
+                    log.RequestBody = Info.RequestBody;
+                    log.RequestHeaders = Info.RequestHeaders;
+                }
                 connection.Close();
                 return logs.ToPaginatedList(pageNumber);
             }
@@ -61,8 +71,8 @@ namespace InuLogs.src.Helpers
         {
             if (GeneralHelper.IsOracle())
             {
-                var query = @$"INSERT INTO {Constants.InuLogTableName} (responseBody,responseStatus,requestBody,queryString,path,requestHeaders,responseHeaders,method,host,ipAddress,timeSpent,startTime,endTime,resultexception,scheme) " +
-                "VALUES (:ResponseBody,:ResponseStatus,:RequestBody,:QueryString,:Path,:RequestHeaders,:ResponseHeaders,:Method,:Host,:IpAddress,:TimeSpent,:StartTime,:EndTime,:ResultException,:Scheme)";
+                var query = @$"INSERT INTO {Constants.InuLogTableName} (responseStatus,path,method,host,ipAddress,timeSpent,startTime,endTime,resultexception,scheme,requestandresponseinfo) " +
+                "VALUES (:ResponseStatus,:Path,:Method,:Host,:IpAddress,:TimeSpent,:StartTime,:EndTime,:ResultException,:Scheme,:RequestAndResponseInfo)";
                 var parameters = new OracleDynamicParameters();
                 if (GeneralHelper.GetExceptionMessageKeyWords().Any(keyword => log.ResponseBody.Contains(keyword, StringComparison.OrdinalIgnoreCase)))
                 {
@@ -73,19 +83,15 @@ namespace InuLogs.src.Helpers
                     parameters.Add("ResultException", 0, OracleMappingType.Int32, ParameterDirection.Input);
                 }
                 parameters.Add("ResponseStatus", log.ResponseStatus, OracleMappingType.Int32, ParameterDirection.Input);
-                parameters.Add("ResponseBody", log.ResponseBody, OracleMappingType.Clob, ParameterDirection.Input);
-                parameters.Add("RequestBody", log.RequestBody, OracleMappingType.Clob, ParameterDirection.Input);
-                parameters.Add("QueryString", log.QueryString, OracleMappingType.Clob, ParameterDirection.Input);
-                parameters.Add("Path", log.Path, OracleMappingType.Clob, ParameterDirection.Input);
-                parameters.Add("RequestHeaders", log.RequestHeaders, OracleMappingType.Clob, ParameterDirection.Input);
-                parameters.Add("ResponseHeaders", log.ResponseHeaders, OracleMappingType.Clob, ParameterDirection.Input);
+                parameters.Add("Path", log.Path, OracleMappingType.Varchar2, ParameterDirection.Input);
                 parameters.Add("Method", log.Method, OracleMappingType.Varchar2, ParameterDirection.Input);
-                parameters.Add("Host", log.Host, OracleMappingType.Clob, ParameterDirection.Input);
+                parameters.Add("Host", log.Host, OracleMappingType.Varchar2, ParameterDirection.Input);
                 parameters.Add("IpAddress", log.IpAddress, OracleMappingType.Varchar2, ParameterDirection.Input);
                 parameters.Add("TimeSpent", log.TimeSpent, OracleMappingType.Varchar2, ParameterDirection.Input);
                 parameters.Add("StartTime", log.StartTime, OracleMappingType.Date, ParameterDirection.Input);
                 parameters.Add("EndTime", log.EndTime, OracleMappingType.Date, ParameterDirection.Input);
                 parameters.Add("Scheme", log.Scheme, OracleMappingType.Varchar2, ParameterDirection.Input);
+                parameters.Add("RequestAndResponseInfo", log.RequestAndResponseInfo, OracleMappingType.Clob, ParameterDirection.Input);
 
                 using (var connection = ExternalDbContext.CreateSQLConnection())
                 {
@@ -96,8 +102,8 @@ namespace InuLogs.src.Helpers
             }
             else
             {
-                var query = @$"INSERT INTO {Constants.InuLogTableName} (responseBody,responseStatus,requestBody,queryString,path,requestHeaders,responseHeaders,method,host,ipAddress,timeSpent,startTime,endTime,resultexception,scheme) " +
-                "VALUES (@ResponseBody,@ResponseStatus,@RequestBody,@QueryString,@Path,@RequestHeaders,@ResponseHeaders,@Method,@Host,@IpAddress,@TimeSpent,@StartTime,@EndTime,@ResultException,@Scheme);";
+                var query = @$"INSERT INTO {Constants.InuLogTableName} (responseStatus,path,method,host,ipAddress,timeSpent,startTime,endTime,resultexception,scheme,requestandresponseinfo) " +
+                "VALUES (@ResponseStatus,@Path,@Method,@Host,@IpAddress,@TimeSpent,@StartTime,@EndTime,@ResultException,@Scheme,@RequestAndResponseInfo);";
                 var parameters = new DynamicParameters();
                 if (GeneralHelper.GetExceptionMessageKeyWords().Any(keyword => log.ResponseBody.Contains(keyword, StringComparison.OrdinalIgnoreCase)))
                 {
@@ -107,17 +113,15 @@ namespace InuLogs.src.Helpers
                 {
                     parameters.Add("ResultException", 0, DbType.Int32);
                 }
-                parameters.Add("ResponseBody", GeneralHelper.IsPostgres() ? log.ResponseBody.Replace("\u0000", "") : log.ResponseBody, DbType.String);
-                parameters.Add("RequestBody", GeneralHelper.IsPostgres() ? log.RequestBody.Replace("\u0000", "") : log.RequestBody, DbType.String);
-                parameters.Add("QueryString", log.QueryString, DbType.String);
+                parameters.Add("ResponseStatus", log.ResponseStatus, DbType.Int32);
                 parameters.Add("Path", log.Path, DbType.String);
-                parameters.Add("RequestHeaders", log.RequestHeaders, DbType.String);
-                parameters.Add("ResponseHeaders", log.ResponseHeaders, DbType.String);
                 parameters.Add("Method", log.Method, DbType.String);
                 parameters.Add("Host", log.Host, DbType.String);
                 parameters.Add("IpAddress", log.IpAddress, DbType.String);
                 parameters.Add("TimeSpent", log.TimeSpent, DbType.String);
                 parameters.Add("Scheme", log.Scheme, DbType.String);
+                parameters.Add("RequestAndResponseInfo", log.RequestAndResponseInfo, DbType.String);
+
                 if (GeneralHelper.IsPostgres())
                 {
                     parameters.Add("StartTime", log.StartTime, DbType.DateTime);

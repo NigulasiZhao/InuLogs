@@ -32,9 +32,18 @@ namespace InuLogs.src.Helpers
                 filter &= builder.Eq(x => x.Method, verbString);
 
             if (!string.IsNullOrEmpty(searchString))
-                filter &= builder.Where(l => l.Path.ToLower().Contains(searchString) || l.Method.ToLower().Contains(searchString) || (!string.IsNullOrEmpty(l.QueryString) && l.QueryString.ToLower().Contains(searchString)));
+                filter &= builder.Where(l => l.Path.ToLower().Contains(searchString) || l.Method.ToLower().Contains(searchString) || (!string.IsNullOrEmpty(l.RequestAndResponseInfo) && l.RequestAndResponseInfo.ToLower().Contains(searchString)));
 
             var result = _inuLogs.Find(filter).SortByDescending(x => x.Id).ToPaginatedList(pageNumber);
+            foreach (var item in result.Data)
+            {
+                RequestAndResponseInfoModel Info = Newtonsoft.Json.JsonConvert.DeserializeObject<RequestAndResponseInfoModel>(item.RequestAndResponseInfo);
+                item.QueryString = Info.QueryString;
+                item.ResponseHeaders = Info.ResponseHeaders;
+                item.ResponseBody = Info.ResponseBody;
+                item.RequestBody = Info.RequestBody;
+                item.RequestHeaders = Info.RequestHeaders;
+            }
             return result;
         }
 

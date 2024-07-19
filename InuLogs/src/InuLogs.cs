@@ -4,17 +4,15 @@ using InuLogs.src.Managers;
 using InuLogs.src.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IO;
-using MySqlX.XDevAPI;
+using MongoDB.Bson.IO;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Ubiety.Dns.Core.Common;
-
+using Newtonsoft.Json;
 namespace InuLogs.src
 {
     internal class InuLogs
@@ -73,6 +71,14 @@ namespace InuLogs.src
                     StartTime = requestLog.StartTime,
                     EndTime = responseLog.FinishTime,
                     Scheme = requestLog.Scheme,
+                    RequestAndResponseInfo = Newtonsoft.Json.JsonConvert.SerializeObject(new RequestAndResponseInfoModel()
+                    {
+                        QueryString = requestLog.QueryString,
+                        RequestBody = responseLog.ResponseBody,
+                        RequestHeaders = responseLog.Headers,
+                        ResponseBody = responseLog.ResponseBody,
+                        ResponseHeaders = responseLog.Headers
+                    })
                 };
 
                 await DynamicDBManager.InsertInuLog(inuLog);
