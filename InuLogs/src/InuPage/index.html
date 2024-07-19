@@ -1198,13 +1198,21 @@
                     console.log('没有可重试的请求记录');
                 }
             });
-            $('#retryRequestSend').on('click', function (event) {
+            $('#retryRequestSend').off('click').on('click', function (event) {
                 if (data) {
                     retryRequest(data);
                 } else {
                     console.log('没有可重试的请求记录');
                 }
             });
+
+            // $('#retryRequestSend').on('click', function (event) {
+            //     if (data) {
+            //         retryRequest(data);
+            //     } else {
+            //         console.log('没有可重试的请求记录');
+            //     }
+            // });
             if (data.responseBody != null && data.responseBody !== "") {
                 document.getElementById("resBodyCopy").style.display = "block";
                 var element = document.getElementById("resBody");

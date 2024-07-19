@@ -74,8 +74,8 @@ namespace InuLogs.src
                     RequestAndResponseInfo = Newtonsoft.Json.JsonConvert.SerializeObject(new RequestAndResponseInfoModel()
                     {
                         QueryString = requestLog.QueryString,
-                        RequestBody = responseLog.ResponseBody,
-                        RequestHeaders = responseLog.Headers,
+                        RequestBody = requestLog.RequestBody,
+                        RequestHeaders = requestLog.Headers,
                         ResponseBody = responseLog.ResponseBody,
                         ResponseHeaders = responseLog.Headers
                     })

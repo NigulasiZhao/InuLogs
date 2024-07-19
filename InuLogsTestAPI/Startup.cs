@@ -30,6 +30,7 @@ namespace InuLogsTestAPI
             services.AddControllers();
             services.AddInuLogServices(opt =>
             {
+                
                 opt.IsAutoClear = true;
                 opt.SetExternalDbConnString = "Data Source=(DESCRIPTION =(ADDRESS = (PROTOCOL = TCP)(HOST = 192.168.88.31)(PORT = 1521))(CONNECT_DATA =(SERVER = DEDICATED)(SERVICE_NAME = orclpdb)));User ID=productgis;Password=Hdkj1234#;Pooling=true;Max Pool Size=60;Min Pool Size=1;";
                 //opt.SetExternalDbConnString = "User ID=productgis;Password=hdkj;Host=192.168.88.31;Port=5432;Database=geodata;Pooling=true;CommandTimeout=1200;";
@@ -51,7 +52,7 @@ namespace InuLogsTestAPI
             app.UseRouting();
 
             app.UseAuthorization();
-            app.UseInuLog(opt => { opt.InuPageUsername = "admin"; opt.InuPagePassword = "123"; });
+            app.UseInuLog(opt => { opt.InuPageUsername = "admin"; opt.InuPagePassword = "123"; opt.Blacklist = "/swagger.json, /index.html"; });
 
             app.UseEndpoints(endpoints =>
             {
