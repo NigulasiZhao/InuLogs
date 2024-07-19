@@ -288,7 +288,7 @@
                 <div id="exceptionTab" class="tab-pane fade">
                     <div class="row" style="height:20px">
                     </div>
-                    <div class="mt-3 row">
+                    <div class="row">
                         <div class="col-md-12">
                             <div class="table">
                                 <table class="table table-hover table-responsive-lg table-lg shadow p-3 mb-5 bg-light rounded">
@@ -329,7 +329,7 @@
                 <div id="incodeTab" class="tab-pane fade">
                     <div class="row" style="height:20px">
                     </div>
-                    <div class="mt-3 row">
+                    <div class="row">
                         <div class="col-md-12">
                             <div class="table table-responsive">
                                 <table class="table table-hover table-lg shadow p-3 mb-5 bg-light rounded">
@@ -713,6 +713,7 @@
         }
 
         function showRetryModal(record) {
+            $('#retryReponse').text('');
             // 从记录中获取请求信息
             let method = record.method;
             let url = record.scheme + "://" + record.host + record.path;
@@ -750,7 +751,7 @@
                 context: document.body,
                 success: function (data) {
                     $('#requestTips').modal('show');
-                    $('#retryReponse').text(JSON.stringify(JSON.parse(data), null, 4));
+                    $('#retryReponse').text(JSON.stringify(data, null, 4));
                     $btn.prop('disabled', false); // 启用按钮
                     $btn.html('发送');
                     setTimeout(function () {
