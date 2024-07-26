@@ -751,7 +751,9 @@
                 context: document.body,
                 success: function (data) {
                     $('#requestTips').modal('show');
-                    $('#retryReponse').text(JSON.stringify(data, null, 4));
+                    //JSON.parse(element.innerText)
+                    //JSON.stringify(data, null, 4)
+                    $('#retryReponse').text(JSON.stringify(JSON.parse(data), null, 4));
                     $btn.prop('disabled', false); // 启用按钮
                     $btn.html('发送');
                     setTimeout(function () {
